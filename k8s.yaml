@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: minzunmik/order-multiagent
+        image: minzunmik/order-multiagent:6917ea0b542655a66ea4a6acfe38a8210f8db6f6
         imagePullPolicy: Always
 
         ports:
