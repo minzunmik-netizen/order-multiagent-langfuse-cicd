@@ -25,22 +25,22 @@ def manager(state: AnalysisState):
     return {'selected': route['agents'], 'days': route['days'],
            'results': {}, 'charts': [], 'customer_name': route.get('customer_name', ''), 'trace': ['manager → ' + ', '.join(route['agents'])]}
 
-
+@observe(name="manager", capture_input=False)
 def after_manager(state):
     return 'product_agent' if 'product' in state['selected'] else 'customer_agent'
 
-
+@observe(name="manager", capture_input=False)
 def product_agent(state: AnalysisState):
     result = fetch_series('product', state['days'])
     return {'results': {**state['results'], 'product': result},
             'charts': state['charts'] + make_chart(result),
             'trace': state['trace'] + ['product_agent']}
 
-
+@observe(name="manager", capture_input=False)
 def after_product(state):
     return 'customer_agent' if 'customer' in state['selected'] else 'summarize'
 
-
+@observe(name="manager", capture_input=False)
 def customer_agent(state: AnalysisState):
     result = fetch_series('customer', state['days'])
     # Customer IDs are taken only from the top-5 aggregated Parquet rows.
@@ -66,7 +66,7 @@ def customer_agent(state: AnalysisState):
             'customer_info': details, 'mcp_warning': warning,
             'trace': trace}
 
-
+@observe(name="manager", capture_input=False)
 def summarize(state: AnalysisState):
     # Entire aggregate dataset is capped to top 5/day, but totals contain all orders.
     facts = {k: {'latest_data_date': v['latest_data_date'], 'days': v['days'],
